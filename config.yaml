@@ -1,0 +1,4 @@
+targetDirectory: /tmp
+  example.com: 1.2.3.4
+  example2.com: 2.3.4.5
+
