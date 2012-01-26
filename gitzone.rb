@@ -1,11 +1,24 @@
+#!/usr/bin/env ruby
+
 require 'rubygems'
 require 'net/dns/resolver'
+require 'yaml'
 
 res = Net::DNS::Resolver.new()
 
-zonelist = { "example.com" => "1.2.3.4", "example2.com" => "2.3.4.5" }
+zonelist = ReaderYAML.new('zonelist.yaml')
 
-zonelist.each { |zone,ns|
-  puts "#{zone} is at #{ns}"
-}
 
+zonelist.each do |zone,ns|
+  res.nameserver=ns
+  fullzone = res.axfr(zone)
+  puts fullzone
+end
+
+
+class ReaderYAML
+  def initialize(file)
+    lines File.read(file)
+    @h = YAML::load(lines)
+  end
+end
