@@ -21,14 +21,18 @@ end
 def read_config
   config = YAML.load_file("config.yaml")
   
-  zonelist = Hash.new()
+  @zonelist = {}
   
-  config.each_key { |targetDirectory|
-    #zonelist.set("#{targetDirectory}", config[targetDirectory])
-    zonelist = { targetDirectory => config[targetDirectory] }
-    puts "#{targetDirectory} will contain #{zonelist.key(targetDirectory)}"
-  }
+  config.each_key do |location|
+
+    config[location].each do |zone,ns|
+      @zonelist.store(location, zone => ns)
+    end
+    
+  end
 end
 
 read_config
+
+puts @zonelist.inspect
 
