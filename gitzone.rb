@@ -6,18 +6,11 @@ require 'yaml'
 
 $res = Net::DNS::Resolver.new
 
-=begin
-zonelist.each do |zone,ns|
-  res.nameserver=ns
-  fullzone = res.axfr(zone)
-  puts fullzone
-end
-=end
 
 def read_config(cfgFile)
   config = YAML.load_file(cfgFile)
   
-  zonehash = {}
+  configHash = {}
   
   config.each_key do |location|
     zonepair = {}
@@ -26,19 +19,19 @@ def read_config(cfgFile)
       zonepair.store(zone, ns)
     end
     
-    zonehash.store(location, zonepair)
+    configHash.store(location, zonepair)
   end
   
-  return zonehash
+  return configHash
 end
 
-zonelist = read_config("config.yaml")
+zoneList = read_config("config.yaml")
 
-puts zonelist.inspect
+puts zoneList.inspect
 
-zonelist.each_key do |location|
+zoneList.each_key do |location|
   puts "Working with #{location}"
-  zonelist[location].each do |zone,ns|
+  zoneList[location].each do |zone,ns|
     puts "Setting nameserver to #{ns}"
     $res.nameserver=ns
     puts "Performing AXFR of zone #{zone}"
