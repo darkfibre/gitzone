@@ -1,11 +1,11 @@
 #!/usr/bin/env ruby
 
 require 'rubygems'
-require 'net/dns/resolver'
+require 'dnsruby'
 require 'yaml'
 
-$res = Net::DNS::Resolver.new
-
+$res = Dnsruby::ZoneTransfer.new
+$res.transfer_type = Dnsruby::Types.AXFR
 
 def read_config(cfgFile)
   config = YAML.load_file(cfgFile)
@@ -31,11 +31,18 @@ puts zoneList.inspect
 
 zoneList.each_key do |location|
   puts "Working with #{location}"
+  
   zoneList[location].each do |zone,ns|
     puts "Setting nameserver to #{ns}"
-    $res.nameserver=ns
+    $res.server = ns
+    
     puts "Performing AXFR of zone #{zone}"
-    fullzone = $res.axfr("#{zone}")
-    puts fullzone
+    fullzone = $res.transfer("#{zone}")
+    
+    if(fullzone)
+      fullzone.each do |rr|
+        puts rr.inspect
+      end
+    end
   end
 end
