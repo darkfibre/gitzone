@@ -1,5 +1,5 @@
 This is my first attempt at writing anything in ruby.  Yes, I'm ignorant and yes my code sucks.
 
-This project requires the net-dns ruby gem.
+This project requires the 'dnsruby' ruby gem.
 
 gitzone.rb - pulls a DNZ zone via AXFR and commits it to a specified git repository.
