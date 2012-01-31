@@ -1,8 +1,11 @@
-This is my first attempt at writing anything in ruby.  My code probably sucks.
+This is my first attempt at writing anything in ruby.
+
+Basic functionality exists at this point, it does need some healthy exception handling.
 
 This project requires the 'dnsruby' ruby gem.
 
 gitzone.rb - pulls a DNZ zone via AXFR and commits it to a specified git repository.
+  It is required that the repository exist and files already be added to it.
 
 config.yaml - configuration file, provides the directory to store the zone files as well as the domains and nameservers they are pulled from.
  
