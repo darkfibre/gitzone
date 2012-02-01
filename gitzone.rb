@@ -30,12 +30,26 @@ def write_zone(zoneAXFR,location)
   if(zoneAXFR)
     if File.exists?("#{location}")
       if File.exists?("#{location}.tmp") then File.delete("#{location}.tmp") end
+      if File.exists?("#{location}.unsorted") then File.delete("#{location}.unsorted") end
+        
+      zoneFile = File.open("#{location}.unsorted", "w")
       
-      zonefile = File.open("#{location}.tmp", "w")
+      soa = zoneAXFR[0]
       
-      zoneAXFR.each do |rr|
-        zonefile.puts rr.inspect
+      for i in 1..zoneAXFR.length
+        unless zoneAXFR[i] == nil then zoneFile.puts zoneAXFR[i] end
       end
+      
+      zoneFile.close
+      
+      sortedData = File.readlines("#{location}.unsorted").sort
+      sortedFile = File.open("#{location}.tmp", "w")
+      
+      sortedFile.puts soa
+      sortedFile.puts sortedData
+      sortedFile.close
+      
+      File.delete("#{location}.unsorted")
       
       File.rename("#{location}.tmp", "#{location}")
     else
@@ -60,11 +74,16 @@ zoneList.each_key do |locDir|
     
     puts "Performing AXFR of zone #{zone}"
     zoneAXFR = $res.transfer("#{zone}")
-
+    
     puts "Writing #{zone} to #{location}"
     write_zone(zoneAXFR,location)
   end
   
-  puts "Committing updates in #{locDir}"
-  g.commit_all("Script triggered update for #{zoneList}")
+  unless g.status.changed.empty? then
+    puts "Committing updates in #{locDir}"
+    g.commit_all("Script triggered update for #{zoneList[locDir]}")
+  else
+    puts "No changes in #{locDir}"
+  end
+
 end
