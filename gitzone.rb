@@ -58,7 +58,7 @@ def write_zone(zoneAXFR,location)
   end
 end  
 
-zoneList = read_config("config.yaml")
+zoneList = read_config("#{File.dirname(__FILE__)}/config.yaml")
 
 zoneList.each_key do |locDir|
   puts "Working with #{locDir}"
