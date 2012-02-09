@@ -81,7 +81,7 @@ zoneList.each_key do |locDir|
   
   unless g.status.changed.empty? then
     puts "Committing updates in #{locDir}"
-    g.commit_all("Script triggered update for #{zoneList[locDir]}")
+    g.commit_all("Update triggered by gitZone!")
   else
     puts "No changes in #{locDir}"
   end
